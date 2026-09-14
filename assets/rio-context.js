@@ -19,10 +19,15 @@
       localStorage.setItem(key,aliases[key]?.[value]||value);
     }
   }
-  const canUse = item => (item.slug!=='picking-salida'||branch==='DEPOSITO')&&(!item.restricted||!!window.RioAccess?.isUnlocked());
+  const profileApps = {
+    ADMINISTRACION: ['supervisores','asistencia-dashboard','check-depositos'],
+    WEB: ['categorizador','pedidos-web','pedidos-dashboard','clientes-contactar','banco-medios','asistencia','confirmacion-depositos','etiquetas','incidentes','objetivos-ventas']
+  };
+  const inProfile = slug => !profileApps[branch] || profileApps[branch].includes(slug);
+  const canUse = item => inProfile(item.slug)&&(item.slug!=='picking-salida'||branch==='DEPOSITO')&&(!item.restricted||!!window.RioAccess?.isUnlocked());
   window.RioContext={branch,branches,label,canonical,isLocal,canUse,change:home,storageKey:key=>key+':'+(branch||'unassigned')};
   if(branch) {try{seed(branch);}catch{}}
-  if(currentSlug&&(!branch || (branch==='ADMINISTRACION'&&!window.RioAccess?.isUnlocked()) || (currentSlug==='picking-salida'&&branch!=='DEPOSITO'))) {
+  if(currentSlug&&(!branch || !inProfile(currentSlug) || (branch==='ADMINISTRACION'&&!window.RioAccess?.isUnlocked()) || (currentSlug==='picking-salida'&&branch!=='DEPOSITO'))) {
     location.replace(new URL('index.html'+(currentSlug==='picking-salida'?'?notice=deposito':''),root));
     return;
   }

@@ -23,8 +23,8 @@ test('only depot profile can open picking, including direct URLs',()=>{
   assert.equal(boot('ADMINISTRACION','picking-salida',true).api.canUse({slug:'picking-salida'}),false);
 });
 test('admin profile must renew access when the session expires',()=>{
-  assert.ok(boot('ADMINISTRACION','margenes').redirect);
-  assert.equal(boot('ADMINISTRACION','margenes',true).redirect,'');
+  assert.ok(boot('ADMINISTRACION','check-depositos').redirect);
+  assert.equal(boot('ADMINISTRACION','check-depositos',true).redirect,'');
   assert.equal(boot('QUILMES').api.canUse({slug:'margenes',restricted:true}),false);
 });
 test('branch spellings resolve to the same operating branch',()=>{
@@ -49,7 +49,18 @@ test('all workspace branch names are uppercase and Corrientes 2 is no longer sel
 });
 
 test('administration tools require access and become available after authentication',()=>{
-  const tool={slug:'margenes',restricted:true};
+  const tool={slug:'check-depositos',restricted:true};
   assert.equal(boot('ADMINISTRACION','',false).api.canUse(tool),false);
   assert.equal(boot('ADMINISTRACION','',true).api.canUse(tool),true);
 });
+
+ test('profile menus contain exactly the requested applications, even after supervisor unlock',()=>{
+  const catalogCode=fs.readFileSync('assets/app-catalog.js','utf8');
+  const sandbox={window:{}};vm.runInNewContext(catalogCode,sandbox);
+  const expected={ADMINISTRACION:['supervisores','asistencia-dashboard','check-depositos'],WEB:['categorizador','pedidos-web','pedidos-dashboard','clientes-contactar','banco-medios','asistencia','confirmacion-depositos','etiquetas','incidentes','objetivos-ventas']};
+  for(const [profile,slugs] of Object.entries(expected)){
+    const api=boot(profile,'',true).api;
+    assert.deepEqual(Array.from(sandbox.window.RioCatalog.filter(api.canUse),item=>item.slug).sort(),slugs.sort());
+    assert.ok(boot(profile,'entrada-mercaderia',true).redirect);
+  }
+ });

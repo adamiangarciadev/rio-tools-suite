@@ -43,6 +43,13 @@
   categories.forEach(cat=>{makeFilter(cat,$('filters'),false);makeFilter(cat,$('areaNav'),true);});
   function render(){
     const unlocked=!!window.RioAccess?.isUnlocked();document.body.classList.toggle('supervision-unlocked',unlocked);
+    document.querySelectorAll('a[href*="apps/"]').forEach(link=>{
+      if(link.classList.contains('item'))return;
+      const slug=link.getAttribute('href').match(/apps\/([^/]+)/)?.[1];
+      if(slug)link.hidden=!window.RioContext.canUse({slug});
+    });
+    const quick=document.querySelector('.quick-panel');
+    if(quick)quick.hidden=![...quick.querySelectorAll('a')].some(link=>!link.hidden);
     const query=normalize($('toolSearch').value.trim());let count=0;
     const focused=area!=='all'||mode!=='all'||query!=='';
     document.body.classList.toggle('focus-mode',focused);
@@ -53,7 +60,7 @@
       tool.row.style.order=mode==='recent'?recent.indexOf(tool.id):'';
     });
     categories.forEach(cat=>{cat.el.hidden=!tools.some(t=>t.cat===cat&&!t.row.hidden);});
-    document.querySelectorAll('[data-area]').forEach(button=>{const active=button.dataset.area===area&&mode==='all';button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
+    document.querySelectorAll('[data-area]').forEach(button=>{button.hidden=button.dataset.area!=='all'&&!tools.some(t=>t.cat.id===button.dataset.area&&accessible(t));const active=button.dataset.area===area&&mode==='all';button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
     document.querySelectorAll('[data-mode]').forEach(button=>{const active=mode===button.dataset.mode&&area==='all';button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));});
     $('viewTitle').textContent=mode==='favorites'?'Tus favoritos':mode==='recent'?'Abiertas recientemente':area==='all'?'Todas las herramientas':categories.find(c=>c.id===area).name;
     $('breadcrumb').textContent=mode==='all'&&area==='all'?'Vista general':$('viewTitle').textContent;

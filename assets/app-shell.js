@@ -24,7 +24,7 @@
     if(area===current.area){catalog.filter(tool=>tool.area===area&&allowed(tool)&&!tool.unlisted).forEach(tool=>{const a=link(tool.name,'apps/'+tool.slug+'/','rio-tool-link');if(tool.slug===slug){a.classList.add('is-current');a.setAttribute('aria-current','page');}group.append(a);});}
     nav.append(group);
   });rail.append(nav);
-  const help=link('','apps/incidentes/','rio-rail-help');help.innerHTML=svg('help')+'<span>Mesa de ayuda</span>';rail.append(help);
+  if(allowed({slug:'incidentes'})){const help=link('','apps/incidentes/','rio-rail-help');help.innerHTML=svg('help')+'<span>Mesa de ayuda</span>';rail.append(help);}
   const shade=el('button','rio-nav-shade');shade.type='button';shade.setAttribute('aria-label','Cerrar navegación');shade.hidden=true;
   const bar=el('div','rio-appbar');bar.setAttribute('role','navigation');bar.setAttribute('aria-label','Navegación de la aplicación');
   const menu=el('button','rio-shell-button rio-menu-toggle');menu.type='button';menu.innerHTML=svg('menu');menu.setAttribute('aria-label','Abrir navegación');menu.setAttribute('aria-expanded','false');menu.setAttribute('aria-controls',rail.id);
