@@ -23,6 +23,8 @@
 <script src="../../assets/rio-access.js?v=935accae1e"></script>
 <script src="../../assets/rio-context.js?v=8b59f5d8a2"></script>
 <link rel="stylesheet" href="../../assets/rio-context.css?v=952f92312d">
+  <link rel="stylesheet" href="../../assets/rio-bank-accounts.css?v=1">
+  <script defer src="../../assets/rio-bank-accounts.js?v=1"></script>
 </head>
 
 <body class="rio-app" data-rio-app="archivos-administrativos">
@@ -86,27 +88,10 @@
       <!-- 2) CUENTAS PARA DEPÓSITO -->
       <article class="adm-panel" id="panel-cuentas">
         <header class="adm-head">
-          <h2 class="adm-title">Cuentas para Depósito (PROXIMAMENTE)</h2>
-          <p class="adm-sub">
-            Accesos rápidos a archivos internos del depósito.
-          </p>
+          <h2 class="adm-title">Cuentas para Depósito</h2>
+          <p class="adm-sub">Consultá y descargá los datos bancarios de cada cuenta.</p>
         </header>
-
-        <div class="adm-body">
-          <div class="adm-links">
-            <!-- Ejemplos
-            <a class="adm-link" href="LINK" target="_blank" rel="noopener">
-              Cuenta MPQR Depósito
-            </a>
-            <a class="adm-link" href="LINK" target="_blank" rel="noopener">
-              CBU Proveedor
-            </a>
-            -->
-            <div class="adm-empty">
-              Las cuentas se publicarán en esta sección cuando estén disponibles.
-            </div>
-          </div>
-        </div>
+        <div class="adm-body" data-rio-bank-accounts></div>
       </article>
 
       <!-- 3) MANUALES DRAGONFISH -->

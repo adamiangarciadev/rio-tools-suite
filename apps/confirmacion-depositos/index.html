@@ -21,6 +21,8 @@
 <script src="../../assets/rio-access.js?v=935accae1e"></script>
 <script src="../../assets/rio-context.js?v=8b59f5d8a2"></script>
 <link rel="stylesheet" href="../../assets/rio-context.css?v=952f92312d">
+  <link rel="stylesheet" href="../../assets/rio-bank-accounts.css?v=1">
+  <script defer src="../../assets/rio-bank-accounts.js?v=1"></script>
 </head>
 <body class="rio-app" data-rio-app="confirmacion-depositos">
     <header class="container header-row header-bar module-topbar">
@@ -35,7 +37,10 @@
 
   <main class="container page-grid">
     <section class="card">
-      <h2>Datos del depósito</h2>
+      <div class="rio-bank-toolbar">
+        <h2>Datos del depósito</h2>
+        <button class="btn secondary" type="button" data-rio-bank-open>Ver cuentas para depósito</button>
+      </div>
 
       <div class="grid">
         <label>
