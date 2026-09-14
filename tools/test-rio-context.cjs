@@ -3,6 +3,27 @@ const assert=require('node:assert/strict');
 const vm=require('node:vm');
 const fs=require('node:fs');
 const code=fs.readFileSync('assets/rio-context.js','utf8');
+test('named local profiles hide ecommerce apps and reject their direct URLs',()=>{
+  const branches=['AV2','NAZCA','QUILMES','CORRIENTES','DEPOSITO','LAMARCA','SARMIENTO','PUEYRREDON'];
+  const hidden=['pedidos-web','clientes-contactar','pedidos-dashboard','categorizador'];
+  for(const branch of branches)for(const slug of hidden)for(const unlocked of [false,true]){
+    const {api,redirect}=boot(branch,slug,unlocked);
+    assert.equal(api.canUse({slug}),false,`${branch}: ${slug}`);
+    assert.equal(redirect,'https://example.test/Rio-tools/index.html');
+  }
+});
+test('local web orders remain available only for the three named exceptions within the local group',()=>{
+  for(const branch of ['AV2','NAZCA','QUILMES','CORRIENTES','DEPOSITO','LAMARCA','SARMIENTO','PUEYRREDON']){
+    const allowed=['AV2','CORRIENTES','QUILMES'].includes(branch);
+    const {api,redirect}=boot(branch,'pedidos-web-locales');
+    assert.equal(api.canUse({slug:'pedidos-web-locales'}),allowed,branch);
+    assert.equal(redirect==='',allowed,branch);
+    assert.equal(boot(branch).api.canUse({slug:'incidentes'}),true);
+  }
+  // CASTELLI was not included in this request; retain its current access.
+  assert.equal(boot('CASTELLI').api.canUse({slug:'pedidos-web'}),true);
+  assert.equal(boot('WEB').api.canUse({slug:'pedidos-web'}),true);
+});
 function boot(branch='',slug='',unlocked=false){
   const values=new Map(branch?[['rio_workspace_branch_v1',branch]]:[]);
   let redirect='';

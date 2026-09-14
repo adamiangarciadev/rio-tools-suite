@@ -23,7 +23,15 @@
     ADMINISTRACION: ['supervisores','asistencia-dashboard','check-depositos'],
     WEB: ['categorizador','pedidos-web','pedidos-dashboard','clientes-contactar','banco-medios','asistencia','confirmacion-depositos','etiquetas','incidentes','objetivos-ventas']
   };
-  const inProfile = slug => !profileApps[branch] || profileApps[branch].includes(slug);
+  const localProfiles = new Set(['AV2','NAZCA','QUILMES','CORRIENTES','DEPOSITO','LAMARCA','SARMIENTO','PUEYRREDON']);
+  const webOnlyApps = new Set(['pedidos-web','clientes-contactar','pedidos-dashboard','categorizador']);
+  const localOrdersProfiles = new Set(['AV2','CORRIENTES','QUILMES']);
+  const inProfile = slug => {
+    if (profileApps[branch] && !profileApps[branch].includes(slug)) return false;
+    if (!localProfiles.has(branch)) return true;
+    if (webOnlyApps.has(slug)) return false;
+    return slug !== 'pedidos-web-locales' || localOrdersProfiles.has(branch);
+  };
   const canUse = item => inProfile(item.slug)&&(item.slug!=='picking-salida'||branch==='DEPOSITO')&&(!item.restricted||!!window.RioAccess?.isUnlocked());
   window.RioContext={branch,branches,label,canonical,isLocal,canUse,change:home,storageKey:key=>key+':'+(branch||'unassigned')};
   if(branch) {try{seed(branch);}catch{}}
