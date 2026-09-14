@@ -40,3 +40,16 @@ test('legacy branch preferences are seeded before app code executes',()=>{
 test('draft keys are isolated between branches',()=>{
   assert.notEqual(boot('QUILMES').api.storageKey('pedido_v1'),boot('NAZCA').api.storageKey('pedido_v1'));
 });
+
+test('all workspace branch names are uppercase and Corrientes 2 is no longer selectable',()=>{
+  const {api}=boot('AV2');
+  assert.equal(api.branches.includes('CORRIENTES2'),false);
+  for(const branch of api.branches)assert.equal(api.label(branch),api.label(branch).toLocaleUpperCase('es-AR'));
+  assert.ok(boot('CORRIENTES2','asistencia').redirect);
+});
+
+test('administration tools require access and become available after authentication',()=>{
+  const tool={slug:'margenes',restricted:true};
+  assert.equal(boot('ADMINISTRACION','',false).api.canUse(tool),false);
+  assert.equal(boot('ADMINISTRACION','',true).api.canUse(tool),true);
+});

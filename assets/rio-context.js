@@ -2,7 +2,7 @@
   'use strict';
   const root = new URL('../', document.currentScript.src);
   const KEY = 'rio_workspace_branch_v1';
-  const branches = ['AV2','NAZCA','LAMARCA','CORRIENTES','CORRIENTES2','CASTELLI','QUILMES','SARMIENTO','PUEYRREDON','WEB','DEPOSITO','ADMINISTRACION'];
+  const branches = ['AV2','NAZCA','LAMARCA','CORRIENTES','CASTELLI','QUILMES','SARMIENTO','PUEYRREDON','WEB','DEPOSITO','ADMINISTRACION'];
   const labels = {AV2:'Avellaneda 2',PUEYRREDON:'Pueyrredón',DEPOSITO:'Depósito',ADMINISTRACION:'Administración',CORRIENTES2:'Corrientes 2'};
   const normalize = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]/g,'');
   const canonical = value => ({AVELLANEDA:'AV2',AVELLANEDA2:'AV2',AVELLANEDA3249:'AV2',AVELLANEDA2900:'NAZCA',AV1:'NAZCA',AVENIDAAVELLANEDA:'AV2',AVENIDAAVELLANEDA2:'AV2',CORRIENTES1:'CORRIENTES',DEPOSITOCENTRAL:'DEPOSITO'}[normalize(value)] || normalize(value));
@@ -91,13 +91,14 @@
     dialog.innerHTML='<form><img src="'+new URL('assets/identity/rio-logo-coral.svg',root)+'" width="100" height="68" alt="RÍO Lencería"><h2 id="rioBranchTitle">¿Desde dónde trabajás?</h2><p>Elegí la sucursal de esta PC. Las herramientas van a abrir con ese local seleccionado.</p><label for="rioBranchChoice">Sucursal o área</label><select id="rioBranchChoice" required><option value="">Elegí una opción</option></select><div id="rioAdminFields" hidden><label for="rioAdminPassword">Clave de Administración</label><input id="rioAdminPassword" type="password" autocomplete="current-password"><p>Usá la clave de acceso de la suite.</p></div><p class="rio-context-message" role="status"></p><button type="submit">Entrar a mi espacio</button></form>';
     const choice=dialog.querySelector('select');branches.forEach(value=>choice.add(new Option(label(value),value)));choice.value=new URLSearchParams(location.search).get("profile")==="ADMINISTRACION"?"ADMINISTRACION":branch;
     const admin=dialog.querySelector('#rioAdminFields'), pass=dialog.querySelector('input');
-    const sync=()=>{admin.hidden=choice.value!=='ADMINISTRACION';pass.required=!admin.hidden;};choice.onchange=sync;sync();
+    const submit=dialog.querySelector('button[type="submit"]');
+    const sync=()=>{admin.hidden=choice.value!=='ADMINISTRACION';pass.required=!admin.hidden;pass.value='';dialog.querySelector('[role=status]').textContent='';submit.textContent=admin.hidden?'Entrar a mi espacio':'Ingresar a Administración';};choice.onchange=sync;sync();
     dialog.querySelector('form').onsubmit=event=>{
       event.preventDefault();const value=choice.value;
       if(value==='ADMINISTRACION'&&!window.RioAccess?.unlock(pass.value)){dialog.querySelector('[role=status]').textContent='La clave no es correcta. Volvé a intentarlo.';pass.value='';pass.focus();return;}
       try{localStorage.setItem(KEY,value);seed(value);}catch{dialog.querySelector('[role=status]').textContent='El navegador no permite guardar la sucursal. Habilitá el almacenamiento para continuar.';return;}
       if(value!=='ADMINISTRACION')window.RioAccess?.lock();
-      location.replace(new URL('index.html',root));
+      location.replace(new URL(value==='ADMINISTRACION'?'index.html?area=5':'index.html',root));
     };
     dialog.addEventListener('cancel',e=>e.preventDefault());document.body.append(dialog);dialog.showModal();
   }
