@@ -1,0 +1,42 @@
+const {test}=require('node:test');
+const assert=require('node:assert/strict');
+const vm=require('node:vm');
+const fs=require('node:fs');
+const code=fs.readFileSync('assets/rio-context.js','utf8');
+function boot(branch='',slug='',unlocked=false){
+  const values=new Map(branch?[['rio_workspace_branch_v1',branch]]:[]);
+  let redirect='';
+  const window={RioAccess:{isUnlocked:()=>unlocked}};
+  const context={URL,window,decodeURIComponent,queueMicrotask,
+    document:{currentScript:{src:'https://example.test/Rio-tools/assets/rio-context.js'},readyState:'loading',addEventListener(){}},
+    location:{pathname:'/Rio-tools/'+(slug?'apps/'+slug+'/':'index.html'),replace:u=>redirect=String(u),assign(){}},
+    localStorage:{getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v)},addEventListener(){}};
+  vm.runInNewContext(code,context);
+  return {api:window.RioContext,values,redirect};
+}
+test('first direct app visit returns to the Pages-prefixed home',()=>{
+  assert.equal(boot('','asistencia').redirect,'https://example.test/Rio-tools/index.html');
+});
+test('only depot profile can open picking, including direct URLs',()=>{
+  assert.match(boot('QUILMES','picking-salida').redirect,/notice=deposito/);
+  assert.equal(boot('DEPOSITO','picking-salida').redirect,'');
+  assert.equal(boot('ADMINISTRACION','picking-salida',true).api.canUse({slug:'picking-salida'}),false);
+});
+test('admin profile must renew access when the session expires',()=>{
+  assert.ok(boot('ADMINISTRACION','margenes').redirect);
+  assert.equal(boot('ADMINISTRACION','margenes',true).redirect,'');
+  assert.equal(boot('QUILMES').api.canUse({slug:'margenes',restricted:true}),false);
+});
+test('branch spellings resolve to the same operating branch',()=>{
+  const {api}=boot('AV2');
+  for(const name of ['AV2','Avellaneda 2','Avellaneda 3249'])assert.equal(api.canonical(name),'AV2');
+  assert.equal(api.canonical('Pueyrredón'),'PUEYRREDON');
+  assert.equal(api.canonical('Avellaneda 2900'),'NAZCA');
+});
+test('legacy branch preferences are seeded before app code executes',()=>{
+  const {values}=boot('QUILMES');
+  for(const key of ['rio_sucursal','asistencia_sucursal_v1','rio_sucursal_web','rio_remitos_sucursal'])assert.equal(values.get(key),'QUILMES');
+});
+test('draft keys are isolated between branches',()=>{
+  assert.notEqual(boot('QUILMES').api.storageKey('pedido_v1'),boot('NAZCA').api.storageKey('pedido_v1'));
+});

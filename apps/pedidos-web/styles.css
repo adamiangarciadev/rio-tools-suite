@@ -1,0 +1,515 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  background:#f5f5f5;
+}
+
+header {
+  background:#f6f6f6;
+  color:#5c5269;
+  padding: 10px 15px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+main {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  padding: 20px 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background:white;
+}
+
+th, td {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.date-cell {
+  white-space: nowrap;
+}
+
+.cell-sub {
+  display: block;
+  margin-top: 3px;
+  color:var(--rio-muted);
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.envio-retiro-cell {
+  min-width: 145px;
+}
+
+.edit-envio-cell {
+  width: 88px;
+  min-width: 88px;
+  text-align: center;
+}
+
+.edit-envio-btn {
+  min-height: 30px !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  background:#f3f8f9 !important;
+  color:var(--rio-text) !important;
+  border: 1px solid var(--rio-border-strong) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  opacity: 1 !important;
+}
+
+.edit-envio-btn:hover,
+.edit-envio-btn:focus-visible,
+.edit-envio-btn:active {
+  background:#f3f8f9 !important;
+  border-color: rgba(45, 212, 191, .62) !important;
+}
+
+tr.alerta {
+  background-color:#ffe0e0;
+}
+
+.pedido-row {
+  position: relative;
+  --estado-bg: rgba(17, 24, 33, .96);
+  --estado-border: rgba(148, 163, 184, .24);
+}
+
+.pedido-row > td:first-child {
+  border-left: 4px solid var(--estado-border) !important;
+}
+
+.pedido-row > td {
+  background:var(--estado-bg);
+}
+
+.pedido-row:hover > td {
+  box-shadow: inset 0 0 0 999px rgba(255, 255, 255, .025);
+}
+
+.pedido-row.st-para-armar {
+  --estado-bg: rgba(37, 99, 235, .16);
+  --estado-border: #60a5fa;
+}
+
+.pedido-row.st-armando-pedido,
+.pedido-row.st-armandose {
+  --estado-bg: rgba(124, 58, 237, .18);
+  --estado-border: #a78bfa;
+}
+
+.pedido-row.st-pickeado-armado,
+.pedido-row.st-pickeado {
+  --estado-bg: rgba(79, 70, 229, .18);
+  --estado-border: #818cf8;
+}
+
+.pedido-row.st-esperando-pago {
+  --estado-bg: rgba(245, 158, 11, .18);
+  --estado-border: #fbbf24;
+}
+
+.pedido-row.st-esperando-mercaderia {
+  --estado-bg: rgba(234, 88, 12, .18);
+  --estado-border: #fb923c;
+}
+
+.pedido-row.st-controlado {
+  --estado-bg: rgba(20, 184, 166, .16);
+  --estado-border: #2dd4bf;
+}
+
+.pedido-row.st-pendiente-de-envio {
+  --estado-bg: rgba(14, 165, 233, .16);
+  --estado-border: #38bdf8;
+}
+
+.pedido-row.st-listo-para-retiro {
+  --estado-bg: rgba(34, 197, 94, .16);
+  --estado-border: #4ade80;
+}
+
+.pedido-row.st-enviado-a-sucursal {
+  --estado-bg: rgba(29, 78, 216, .18);
+  --estado-border: #3b82f6;
+}
+
+.pedido-row.st-en-sucursal {
+  --estado-bg: rgba(5, 150, 105, .18);
+  --estado-border: #10b981;
+}
+
+.pedido-row.st-enviado,
+.pedido-row.st-retirado {
+  --estado-bg: rgba(71, 85, 105, .18);
+  --estado-border: #94a3b8;
+}
+
+.pedido-row.st-cancelado {
+  --estado-bg: rgba(220, 38, 38, .18);
+  --estado-border: #f87171;
+}
+
+#estadoCarga {
+  font-size: 13px;
+  color:#5c5269;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.whatsapp-btn {
+  background:rgba(34, 197, 94, .14) !important;
+  border-color: rgba(34, 197, 94, .32) !important;
+}
+
+/* =========================
+   BOTONES
+   ========================= */
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Base */
+button.accion {
+  background:#e9e9e9;
+  color:#111;
+}
+
+button.accion:hover {
+  filter: brightness(0.95);
+}
+
+/* Cancelado siempre rojo */
+button.cancelado {
+  background:#c62828;
+  color:#5c5269;
+}
+button.cancelado:hover {
+  filter: brightness(0.95);
+}
+
+/* =========================
+   COLORES POR ESTADO (clases st-*)
+   Nota: estas clases las agrega el JS
+   ========================= */
+
+button.st-armando-pedido { background:#1565c0; color:#5c5269; }              /* azul */
+button.st-armandose { background:#1565c0; color:#5c5269; }              /* azul */
+button.st-pickeado-armado { background:#6a1b9a; color:#5c5269; }        /* violeta */
+button.st-pickeado { background:#6a1b9a; color:#5c5269; }        /* violeta */
+button.st-esperando-mercaderia { background:#ef6c00; color:#5c5269; }   /* naranja */
+button.st-controlado { background:#f3f9f3; color:#5c5269; }             /* verde */
+button.st-esperando-pago { background:#546e7a; color:#5c5269; }         /* gris azulado */
+button.st-pendiente-de-envio { background:#f3f9f9; color:#5c5269; }     /* teal */
+button.st-listo-para-retiro { background:#f3f9f3; color:#5c5269; }      /* verde oscuro */
+button.st-enviado-a-sucursal { background:#283593; color:#5c5269; }     /* índigo */
+button.st-en-sucursal { background:#f3f9f8; color:#5c5269; }            /* verde agua */
+button.st-enviado { background:#f4f7f8; color:#5c5269; }                /* gris */
+button.st-retirado { background:#f3f9f3; color:#5c5269; }               /* verde */
+
+td:first-child {
+  font-weight: 600;
+}
+
+td:first-child:contains("MAYORISTA") {
+  color:#6a1b9a;
+}
+
+td:first-child:contains("MINORISTA") {
+  color:#1565c0;
+}
+.buscador-row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin: 10px 0;
+}
+
+.buscador-label{
+  font-size: 13px;
+  color:#333;
+  min-width: 55px;
+}
+
+.buscador-input{
+  flex:1;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.buscador-clear{
+  padding: 8px 10px;
+  border-radius: 6px;
+  background:#e9e9e9;
+}
+.dd {
+  position: relative;
+  display: inline-block;
+}
+
+.dd-toggle {
+  background:#e9e9e9;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.dd-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 210px;
+  background:#f3f6f9 !important;
+  border: 1px solid var(--rio-border-strong);
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 12px 28px rgba(0,0,0,.34);
+  display: none;
+  z-index: 1000;
+}
+
+.dd-menu.open {
+  display: block;
+}
+
+.dd-item {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 163, 184, .16) !important;
+  background:#f3f6f9 !important;
+  color:var(--rio-text) !important;
+  font-weight: 800;
+  opacity: 1 !important;
+}
+
+.dd-item:hover,
+.dd-item:focus-visible,
+.dd-item:active {
+  background:#f3f7f9 !important;
+  border-color: rgba(45, 212, 191, .48) !important;
+  opacity: 1 !important;
+}
+
+/* Cancelado destacado */
+.dd-item.cancelado {
+  background:#c62828;
+  color:#5c5269;
+}
+
+.dd-item.cancelado:hover {
+  filter: brightness(0.95);
+}
+/* Celda de acciones */
+td.acciones {
+  padding: 6px;
+}
+
+/* Contenedor dropdown ocupa todo */
+td.acciones .dd {
+  width: 100%;
+}
+
+/* Botón Acciones ocupa toda la celda */
+.dd-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+
+  padding: 8px 10px;
+  border-radius: 6px;
+
+  background:#f3f8f9 !important;
+  color:var(--rio-text) !important;
+  border: 1px solid var(--rio-border-strong) !important;
+  font-size: 13px;
+  font-weight: 800;
+  opacity: 1 !important;
+}
+
+/* Menú desplegable alineado al ancho del botón */
+.dd-menu {
+  width: 100%;
+  left: 0;
+}
+.dd-toggle:hover,
+.dd-toggle:focus-visible,
+.dd-toggle:active {
+  background:#f3f8f9 !important;
+  border-color: rgba(45, 212, 191, .62) !important;
+  opacity: 1 !important;
+}
+footer {
+      text-align: center;
+      padding: 18px 24px;
+      color:var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background:rgba(4, 8, 13, .72);
+  backdrop-filter: blur(8px);
+}
+
+.modal-backdrop[hidden] {
+  display: none;
+}
+
+.whatsapp-form[aria-busy="true"] {
+  opacity: .72;
+  pointer-events: none;
+}
+
+.whatsapp-modal {
+  width: min(560px, 100%);
+  max-height: min(720px, calc(100vh - 36px));
+  overflow: auto;
+  border: 1px solid var(--rio-border);
+  border-radius: 8px;
+  background:var(--rio-surface);
+  color:var(--rio-text);
+  box-shadow: 0 18px 54px rgba(0, 0, 0, .38);
+}
+
+.modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px;
+  border-bottom: 1px solid var(--rio-border);
+}
+
+.modal-kicker {
+  margin: 0 0 4px;
+  color:var(--rio-primary) !important;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.modal-head h2 {
+  margin: 0;
+}
+
+.modal-close {
+  width: 34px;
+  height: 34px;
+  min-height: 34px;
+  padding: 0;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.whatsapp-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px;
+}
+
+.whatsapp-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.whatsapp-form label[hidden] {
+  display: none;
+}
+
+.optional {
+  color:var(--rio-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.whatsapp-form input,
+.whatsapp-form select {
+  width: 100%;
+  border: 1px solid var(--rio-border-strong);
+  border-radius: 6px;
+  background:#f3f6f9;
+  color:var(--rio-text);
+  padding: 10px 12px;
+  outline: none;
+}
+
+.whatsapp-form input:disabled,
+.whatsapp-form select:disabled,
+.whatsapp-form button:disabled,
+.modal-close:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+
+.field-full,
+.modal-actions {
+  grid-column: 1 / -1;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+@media (max-width: 680px) {
+  .whatsapp-form {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Workspace redesign: pedidos-web */
+.rio-app .top-bar{padding:18px;background:#fff;border:1px solid var(--rio-border);border-radius:12px;margin-bottom:20px;gap:12px}.rio-app .top-bar label{display:flex;align-items:center;gap:8px}.rio-app .modal-content{border-radius:16px;padding:24px}.rio-app .whatsapp-form{gap:18px}.rio-app .edit-envio-btn{background:#eee7fa!important;color:#573597!important}

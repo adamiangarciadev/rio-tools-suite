@@ -1,0 +1,122 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 0;
+  background:var(--rio-bg, #f3f6f9);
+  color:var(--rio-text, #224e81);
+}
+
+header {
+  background:#f6f6f6;
+  color:#5c5269;
+  padding: 10px 15px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.top-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.top-bar select,
+.top-bar input {
+  min-width: 220px;
+}
+
+.search-input {
+  flex: 1 1 320px;
+}
+
+main {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  padding: 20px 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background:rgba(15, 23, 34, .96);
+}
+
+th, td {
+  padding: 6px 8px;
+  border: 1px solid rgba(148, 163, 184, .22);
+  font-size: 14px;
+}
+
+tr.alerta {
+  background-color:rgba(251, 113, 133, .18);
+}
+
+button {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.recibido {
+  background:#007bff;
+  color:#5c5269;
+}
+
+button.retirado {
+  background:#28a745;
+  color:#5c5269;
+}
+
+#estadoCarga {
+  font-size: 13px;
+  color:var(--rio-muted, #5c5269);
+}
+
+@media (max-width: 760px) {
+  header {
+    padding: 12px;
+  }
+
+  .top-bar {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .top-bar select,
+  .top-bar input {
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    font-size: 16px;
+  }
+
+  main {
+    padding: 8px;
+    overflow-x: auto;
+  }
+
+  th,
+  td {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+
+  button {
+    min-height: 42px;
+  }
+}
+footer {
+      text-align: center;
+      padding: 18px 24px;
+      color:var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+/* Workspace redesign: pedidos-web-locales */
+.rio-app .top-bar{padding:20px;background:#fff;border:1px solid var(--rio-border);border-radius:12px;margin-bottom:22px;gap:16px}.rio-app .top-bar label{display:grid;gap:7px}.rio-app .modal-content{border-radius:16px;padding:24px}.rio-app .table-container{border:1px solid var(--rio-border);border-radius:12px;overflow:auto}

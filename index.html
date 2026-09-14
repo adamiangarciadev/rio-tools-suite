@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RIO Tools Suite</title>
+  <meta name="description" content="Suite operativa para digitalizar procesos de retail, deposito, ecommerce y administracion." />
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDPZFHV1BV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-CDPZFHV1BV");
+  </script>
+
+  <meta name="theme-color" content="#FF5F5C" />
+  <link rel="icon" href="./assets/rio-mark.svg" type="image/svg+xml" />
+  <link rel="preload" href="./assets/identity/gotham-book.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="./assets/workspace.css?v=4a1897fc7e" />
+  <script defer src="./assets/workspace.js?v=ee7f61fc2e"></script>
+  <link rel="stylesheet" href="assets/rio-identity.css?v=c9458779b8" />
+<script src="assets/rio-access.js?v=935accae1e"></script>
+<script src="assets/rio-context.js?v=e68d2b012b"></script>
+<link rel="stylesheet" href="assets/rio-context.css?v=952f92312d">
+</head>
+<body>
+  <a class="skip" href="#tools">Ir a las herramientas</a>
+  <aside class="sidebar" aria-label="Navegación principal">
+    <a class="brand" href="./" aria-label="RIO Tools, inicio"><img class="rio-brand-logo" src="./assets/identity/rio-logo-coral.svg" alt="RÍO Lencería" width="99" height="68" /><span class="rio-brand-descriptor"><strong>TOOLS</strong><small>Espacio de<br>trabajo</small></span></a>
+    <p class="side-label">Tu espacio</p>
+    <nav class="navigation" aria-label="Mi espacio">
+      <button class="nav-button active" data-mode="all" aria-pressed="true"><svg data-icon="grid"></svg>Inicio</button>
+      <button class="nav-button" data-mode="favorites" aria-pressed="false"><svg data-icon="star"></svg>Favoritos <span class="nav-count" id="favoriteCount">0</span></button>
+      <button class="nav-button" data-mode="recent" aria-pressed="false"><svg data-icon="clock"></svg>Recientes</button>
+    </nav>
+    <div class="area-navigation"><p class="side-label">Áreas de trabajo</p><nav class="navigation" id="areaNav" aria-label="Áreas de trabajo"></nav></div>
+    <div class="side-bottom"><a class="help-link" href="./apps/incidentes/"><svg data-icon="help"></svg>Mesa de ayuda<svg data-icon="arrow"></svg></a><div class="workspace-note"><strong>Un equipo. Un mismo lugar.</strong>Herramientas para hacer más simple cada día.</div></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><div class="breadcrumb">Workspace <span>/</span><strong id="breadcrumb">Vista general</strong></div><div class="top-actions"><time class="date" id="today"></time>
+      <a class="btn access-button" href="./index.html?branch=change&amp;profile=ADMINISTRACION" id="administrationOpenButton"><svg data-icon="lock"></svg>Administración</a>
+      <div class="supervision-access" id="supervisionAccess">
+        <button class="btn access-button" id="supervisionOpenButton" type="button" aria-expanded="false" aria-controls="supervisionAccessForm"><svg data-icon="lock"></svg>Supervisores</button>
+        <form class="supervision-access__form" id="supervisionAccessForm" hidden>
+          <label for="supervisionAccessPass">Acceso de Supervisores</label><input id="supervisionAccessPass" type="password" autocomplete="current-password" placeholder="Ingresá tu clave" required />
+          <button class="btn" type="submit">Ingresar</button><button class="btn" id="accessCancel" type="button">Cancelar</button><div class="supervision-access__message" id="supervisionAccessMessage" role="status"></div>
+        </form>
+        <button class="btn" id="supervisionLockButton" type="button">Cerrar Supervisores</button>
+      </div></div>
+    </header>
+    <div class="offline" id="offline" role="status" hidden>Estás sin conexión. Podés explorar el panel; las herramientas conectadas necesitan internet.</div>
+    <main>
+      <section class="intro"><div><h1>Todo listo para empezar.</h1><p>Tus herramientas, tu equipo y el próximo paso. En un solo lugar.</p></div><span class="local-time"><i></i>Tu espacio de trabajo diario</span></section>
+      <section class="feature" aria-label="Accesos principales">
+        <div class="hero"><h2>Un mismo equipo.<br>Todo en RÍO.</h2><p>Las herramientas que conectan nuestros locales, depósito y equipo. Cada día, más cerca.</p><a class="hero-link" href="#tools">Explorar herramientas<svg data-icon="arrow"></svg></a><div class="hero-art" aria-hidden="true"><img src="./assets/identity/rio-symbol-white.svg" alt="" width="144" height="153" /></div></div>
+        <div class="quick-panel"><div class="quick-heading"><h2>Directo a la tarea</h2><span>Accesos rápidos</span></div>
+          <a class="quick-link" href="./apps/entrada-mercaderia/"><span class="quick-icon"><svg data-icon="box"></svg></span><span><strong>Ingresar mercadería</strong><small>Recepción y control de productos</small></span><svg data-icon="arrow"></svg></a>
+          <a class="quick-link" href="./apps/pedidos-web/"><span class="quick-icon"><svg data-icon="bag"></svg></span><span><strong>Gestionar pedidos web</strong><small>Del pedido a la entrega</small></span><svg data-icon="arrow"></svg></a>
+          <a class="quick-link" href="./apps/asistencia/"><span class="quick-icon"><svg data-icon="people"></svg></span><span><strong>Registrar asistencia</strong><small>El día a día de tu equipo</small></span><svg data-icon="arrow"></svg></a>
+        </div>
+      </section>
+      <section id="tools" aria-labelledby="toolsTitle">
+        <div class="tools-heading"><h2 id="toolsTitle"><span id="viewTitle">Todas las herramientas</span><span class="count" id="toolCount"></span></h2><label class="search"><svg data-icon="search"></svg><input id="toolSearch" type="search" placeholder="Buscar una herramienta…" aria-label="Buscar herramientas" /><kbd>Ctrl K</kbd></label></div>
+        <div class="filter-bar"><div class="filters" id="filters" aria-label="Filtrar por área"></div><div class="view-controls" aria-label="Presentación"><button class="icon-button" data-view="grid" aria-label="Vista por áreas" aria-pressed="true"><svg data-icon="grid"></svg></button><button class="icon-button" data-view="list" aria-label="Vista de lista" aria-pressed="false"><svg data-icon="list"></svg></button></div></div>
+<section class="board" aria-label="Herramientas disponibles">
+        <div class="col">
+          <div class="col-head">
+            <h2>Operaciones</h2>
+            <p>Flujo diario de locales y depósito.</p>
+          </div>
+          <div class="links"><a class="item" href="./apps/objetivos-ventas/"><div class="item-title">Objetivos mensuales</div><p class="item-desc">Meta del mes, ventas acumuladas y cumplimiento diario de tu local.</p></a>
+            <a class="item" href="./apps/entrada-mercaderia/">
+              <div class="item-title">Entrada de Mercadería</div>
+              <p class="item-desc">Ingreso por escaneo, equivalencias y control contra CSV.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/mercaderia-transito/">
+              <div class="item-title">Mercadería en Tránsito</div>
+              <p class="item-desc">Seguimiento de remitos, archivos asociados y picking de transito.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/control-remitos-clientes/">
+              <div class="item-title">Control de Remitos</div>
+              <p class="item-desc">Control y confirmación de remitos emitidos a clientes.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/envios/">
+              <div class="item-title">Envíos y transporte</div>
+              <p class="item-desc">Rótulos, seguimiento interno y control operativo de envíos.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="col-head">
+            <h2>E-commerce</h2>
+            <p>Tiendanube, pedidos y contenido comercial.</p>
+          </div>
+          <div class="links">
+            <a class="item" href="./apps/categorizador/">
+              <div class="item-title">Categorizador</div>
+              <p class="item-desc">Normalización y categorización de productos para publicación.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/pedidos-web/">
+              <div class="item-title">Pedidos Web</div>
+              <p class="item-desc">Gestión y armado de pedidos desde el canal online.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/pedidos-dashboard/">
+              <div class="item-title">Dashboard Pedidos</div>
+              <p class="item-desc">Analisis interactivo del log de estados, sucursales y envíos.</p>
+              <div class="item-meta"><span class="state beta">Nuevo</span></div>
+            </a>
+            <a class="item" href="./apps/clientes-contactar/"><div class="item-title">Clientes a contactar</div><p class="item-desc">Seguimiento comercial de clientes WEB pendientes de contacto.</p></a>
+            <a class="item" href="./apps/pedidos-web-locales/">
+              <div class="item-title">Pedidos Web Locales</div>
+              <p class="item-desc">Entrada, retiro y seguimiento de pedidos web en sucursales.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/banco-medios/">
+              <div class="item-title">Banco de Medios</div>
+              <p class="item-desc">Videos oficiales para redes, pantallas, locales y mayoristas.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="col-head">
+            <h2>Depósito</h2>
+            <p>Preparación, planificación y control.</p>
+          </div>
+          <div class="links">
+            <a class="item" href="./apps/picking-salida/">
+              <div class="item-title">Picking Salida</div>
+              <p class="item-desc">Preparación por código de barras, validación y guardado de salida.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/pedido-semanal/">
+              <div class="item-title">Pedido Semanal</div>
+              <p class="item-desc">Armado de pedidos por curva, históricos, talles y promociones.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/etiquetas/">
+              <div class="item-title">Generador de Etiquetas</div>
+              <p class="item-desc">Generación de archivos para altas, bajas y etiquetas por producto.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="col-head">
+            <h2>Gestión del local</h2>
+            <p>Soporte, supervisión y backoffice.</p>
+          </div>
+          <div class="links">
+            <a class="item" href="./apps/asistencia/">
+              <div class="item-title">Asistencia Personal</div>
+              <p class="item-desc">Registro de asistencia, faltas, permisos y novedades del personal.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/confirmacion-depositos/">
+              <div class="item-title">Depósitos a Confirmar</div>
+              <p class="item-desc">Carga y consulta de depósitos o transferencias bancarias.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/archivos-administrativos/">
+              <div class="item-title">Archivos Administrativos</div>
+              <p class="item-desc">Planillas, rotulos, manuales y recursos internos.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/pedido-carteleria/">
+              <div class="item-title">Pedido de Cartelería</div>
+              <p class="item-desc">Solicitud y seguimiento de cartelería para locales y campañas.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="col-head">
+            <h2>Sistemas</h2>
+            <p>Soporte y seguimiento interno.</p>
+          </div>
+          <div class="links">
+            <a class="item" href="./apps/incidentes/">
+              <div class="item-title">Mesa de Ayuda</div>
+              <p class="item-desc">Solicitudes, problemas técnicos y seguimiento de soporte interno.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+          </div>
+        </div>
+
+        <div class="col" data-supervision-access>
+          <div class="col-head">
+            <h2>Supervisores</h2>
+            <p>Control, análisis y herramientas reservadas.</p>
+          </div>
+          <div class="links">
+            <a class="item" href="./apps/supervisores/">
+              <div class="item-title">Control de Asistencia</div>
+              <p class="item-desc">Vista diaria de asistencia para control de supervisión.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/objetivos-ventas-sistemas/"><div class="item-title">Administrar objetivos</div><p class="item-desc">Editar objetivos mensuales de los locales desde Sistemas.</p></a><a class="item" href="./apps/margenes/">
+              <div class="item-title">Márgenes</div>
+              <p class="item-desc">Dashboard interactivo de ventas, costos, ganancias, sucursales y proveedores.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/asistencia-dashboard/">
+              <div class="item-title">Dashboard Asistencia</div>
+              <p class="item-desc">Control mensual de faltas, llegadas tarde y asistencia por local.</p>
+              <div class="item-meta"><span class="state beta">Nuevo</span></div>
+            </a>
+            <a class="item" href="./apps/check-depositos/">
+              <div class="item-title">Check Depósitos</div>
+              <p class="item-desc">Panel seguro para revisar, corregir y confirmar depósitos.</p>
+              <div class="item-meta"><span class="state beta">Nuevo</span></div>
+            </a>
+            <a class="item" href="./apps/ventas-clientes/">
+              <div class="item-title">Ventas por Cliente</div>
+              <p class="item-desc">Ranking, seguimiento y comportamiento de compra por cliente.</p>
+              <div class="item-meta"><span class="state beta">Nuevo</span></div>
+            </a>
+            <a class="item" href="./apps/sistemas/">
+              <div class="item-title">Gestión de Incidentes</div>
+              <p class="item-desc">Recepción, asignación y seguimiento de incidentes reportados por los locales.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+            <a class="item" href="./apps/remitos-deposito/">
+              <div class="item-title">Remitos Depósito</div>
+              <p class="item-desc">Carga manual, numeración por cliente e historial de remitos.</p>
+              <div class="item-meta"><span class="state beta">Nuevo</span></div>
+            </a>
+            <a class="item" href="./apps/apercibimientos/">
+              <div class="item-title">Apercibimientos</div>
+              <p class="item-desc">Gestión disciplinaria, consulta de remitos y generación de PDF.</p>
+              <div class="item-meta"><span class="state ready">Activo</span></div>
+            </a>
+          </div>
+        </div>
+      </section>
+        <div class="empty" id="empty" hidden><h3 id="emptyTitle"></h3><p id="emptyText"></p><button class="btn" id="resetFilters">Ver todas las herramientas</button></div>
+        <p id="resultsStatus" class="sr-only" role="status"></p>
+      </section>
+    </main>
+    <footer class="footer"><span class="footer-brand"><img src="./assets/identity/rio-symbol-coral.svg" alt="RÍO" width="23" height="27" />Herramientas que conectan tu operación.</span><span>Hecho para tu equipo · RIO Tools</span></footer>
+  </div>
+  <div class="toast" id="toast" role="status" hidden></div>
+</body>
+</html>

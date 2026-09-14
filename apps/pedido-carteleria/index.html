@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pedido de Carteleria | RIO Tools</title>
+  <link rel="stylesheet" href="./styles.css?v=71eac4487b" />
+  <link rel="stylesheet" href="../../assets/rio-theme.css?v=75a74925ef" />
+  <link rel="stylesheet" href="../../assets/app-shell.css?v=99a9c322c0" />
+  <link rel="icon" href="../../assets/rio-mark.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../assets/rio-identity.css?v=c9458779b8" />
+<script src="../../assets/rio-access.js?v=935accae1e"></script>
+<script src="../../assets/rio-context.js?v=e68d2b012b"></script>
+<link rel="stylesheet" href="../../assets/rio-context.css?v=952f92312d">
+</head>
+<body class="rio-app" data-rio-app="pedido-carteleria">
+  <main class="module-shell">
+    <header class="module-header module-topbar">
+      <a class="back-btn" href="../../index.html">Volver al inicio</a>
+      <div class="module-topbar__title">
+        <p class="eyebrow">Administracion</p>
+        <h1>Pedido de Carteleria</h1>
+        <p>Catalogo visual de disenos disponibles para descargar y usar en locales.</p>
+      </div>
+      <div class="module-topbar__spacer"></div>
+    </header>
+
+    <section class="toolbar-panel" aria-label="Filtros de disenos">
+      <div class="search-box">
+        <label for="designSearch">Buscar diseno</label>
+        <input id="designSearch" type="search" placeholder="Buscar por proyecto o numero de pagina" autocomplete="off" />
+      </div>
+      <div class="segmented-control" role="tablist" aria-label="Proyecto">
+        <button class="segment active" type="button" data-project="all">Todos</button>
+        <button class="segment" type="button" data-project="carteles">28,5 x 20</button>
+        <button class="segment" type="button" data-project="a3">A3</button>
+      </div>
+    </section>
+
+    <section class="gallery-shell" aria-label="Vista previa de disenos">
+      <div class="gallery-heading">
+        <div>
+          <p class="eyebrow">Disenos</p>
+          <h2>Vista previa</h2>
+        </div>
+        <p id="resultCount">Cargando disenos...</p>
+      </div>
+      <div class="design-grid" id="designGrid"></div>
+    </section>
+
+    <dialog class="preview-dialog" id="previewDialog">
+      <button class="dialog-close" type="button" id="closePreview" aria-label="Cerrar">&times;</button>
+      <figure>
+        <img id="previewImage" alt="" />
+        <figcaption>
+          <span id="previewTitle"></span>
+          <a id="previewDownload" href="#" download>Descargar PDF</a>
+        </figcaption>
+      </figure>
+    </dialog>
+  </main>
+  <script src="./app.js?v=e5af3f8859"></script>
+  <script src="../../assets/rio-report-problem.js?v=fdea61e060"></script>
+  <script src="../../assets/app-catalog.js?v=fd52fc724b"></script>
+  <script src="../../assets/app-shell.js?v=66a3fcb6ed"></script>
+</body>
+</html>

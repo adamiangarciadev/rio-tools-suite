@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Pedidos - RIO</title>
+  <meta name="description" content="Dashboard interactivo de manejo de pedidos sobre Pedidos_LOG." />
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDPZFHV1BV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-CDPZFHV1BV");
+  </script>
+
+  <link rel="stylesheet" href="../../assets/rio-theme.css?v=75a74925ef" />
+  <link rel="stylesheet" href="styles.css?v=3cfe0dcc9e" />
+<link rel="stylesheet" href="../../assets/app-shell.css?v=99a9c322c0">
+<link rel="stylesheet" href="../../assets/rio-identity.css?v=c9458779b8">
+<link rel="stylesheet" href="../../assets/rio-context.css?v=952f92312d">
+<script src="../../assets/rio-access.js?v=935accae1e"></script>
+<script src="../../assets/rio-context.js?v=e68d2b012b"></script>
+</head>
+<body class="rio-app" data-rio-app="pedidos-dashboard">
+  <section id="accessGate" class="access-gate" aria-labelledby="accessTitle">
+    <form id="accessForm" class="access-card">
+      <div class="access-lock" aria-hidden="true">🔒</div>
+      <h1 id="accessTitle">Dashboard protegido</h1>
+      <p>Ingresá la clave para acceder al Dashboard de Pedidos.</p>
+      <label for="accessPassword">Clave de acceso</label>
+      <input id="accessPassword" type="password" autocomplete="current-password" required autofocus />
+      <button class="btn" type="submit">Ingresar</button>
+      <p id="accessError" class="access-error" role="alert"></p>
+    </form>
+  </section>
+
+  <div id="protectedContent" class="protected-content" hidden>
+  <header class="container module-topbar">
+    <a href="../../index.html" class="btn back-btn">Volver</a>
+    <div class="module-topbar__title">
+      <h1>Dashboard Pedidos</h1>
+      <p>Lectura interactiva de Pedidos_LOG</p>
+    </div>
+    <div class="module-topbar__actions">
+      <button id="refreshBtn" class="btn" type="button">Actualizar</button>
+    </div>
+  </header>
+
+  <main class="container dashboard-shell">
+    <section class="filters-panel">
+      <label>
+        Desde
+        <input id="fromDate" type="date" />
+      </label>
+      <label>
+        Hasta
+        <input id="toDate" type="date" />
+      </label>
+      <label>
+        Sucursal
+        <select id="branchFilter"><option value="">Todas</option></select>
+      </label>
+      <label>
+        Estado actual
+        <select id="stateFilter"><option value="">Todos</option></select>
+      </label>
+      <label>
+        Tipo envio
+        <select id="shippingFilter"><option value="">Todos</option></select>
+      </label>
+      <label>
+        Web
+        <select id="webFilter"><option value="">Todas</option></select>
+      </label>
+      <label>
+        Usuario
+        <select id="userFilter"><option value="">Todos</option></select>
+      </label>
+      <label class="search-field">
+        Buscar
+        <input id="searchInput" type="search" placeholder="ID, usuario, estado o detalle" />
+      </label>
+    </section>
+
+    <section class="kpi-grid" aria-label="Indicadores principales">
+      <article class="kpi-card">
+        <span>Movimientos</span>
+        <strong id="totalEvents">0</strong>
+      </article>
+      <article class="kpi-card">
+        <span>Pedidos unicos</span>
+        <strong id="uniqueOrders">0</strong>
+      </article>
+      <article class="kpi-card">
+        <span>Tiempo promedio armado</span>
+        <strong id="avgBuildTime">-</strong>
+      </article>
+      <article class="kpi-card">
+        <span>Pedidos medidos</span>
+        <strong id="measuredOrders">0</strong>
+      </article>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="panel span-2">
+        <div class="panel-head">
+          <div>
+            <h2>Tiempo en armado</h2>
+            <p id="cycleHint">Desde el primer ingreso hasta el primer estado pickeado/armado</p>
+          </div>
+        </div>
+        <div id="cycleChart" class="cycle-grid"></div>
+      </article>
+
+      <article class="panel span-2">
+        <div class="panel-head">
+          <div>
+            <h2>Actividad diaria</h2>
+            <p id="activityHint">Cambios registrados por dia</p>
+          </div>
+        </div>
+        <div id="dailyChart" class="bar-chart"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Estados actuales</h2>
+        </div>
+        <div id="stateChart" class="stack-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Sucursales</h2>
+        </div>
+        <div id="branchChart" class="stack-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Tipo de envio</h2>
+        </div>
+        <div id="shippingChart" class="stack-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Web</h2>
+        </div>
+        <div id="webChart" class="stack-list"></div>
+      </article>
+
+      <article class="panel span-2">
+        <div class="panel-head">
+          <div>
+            <h2>Usuarios con movimientos</h2>
+            <p>Identificados contra el padron de asistencia; se conserva el dato original si no hay coincidencia segura</p>
+          </div>
+        </div>
+        <div id="userChart" class="stack-list"></div>
+      </article>
+
+      <article class="panel span-2">
+        <div class="panel-head">
+          <div>
+            <h2>Pedidos medidos</h2>
+            <p id="cycleTableHint">Ordenados por mayor tiempo de armado</p>
+          </div>
+        </div>
+        <div class="table-wrap cycle-table">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Sucursal</th>
+                <th>Ingreso</th>
+                <th>Pickeado/Armado</th>
+                <th>Tiempo</th>
+                <th>Estado pickeado</th>
+              </tr>
+            </thead>
+            <tbody id="cycleTable"></tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel span-2">
+        <div class="panel-head">
+          <div>
+            <h2>Ultimos movimientos</h2>
+            <p id="tableHint">Ordenados del mas reciente al mas antiguo</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>ID</th>
+                <th>Sucursal</th>
+                <th>Estado previo</th>
+                <th>Estado actual</th>
+                <th>Envio</th>
+                <th>Web</th>
+                <th>Modifico</th>
+              </tr>
+            </thead>
+            <tbody id="logTable"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </main>
+  </div>
+
+  <script>
+    (() => {
+      const gate = document.getElementById("accessGate");
+      const content = document.getElementById("protectedContent");
+      const form = document.getElementById("accessForm");
+      const password = document.getElementById("accessPassword");
+      const error = document.getElementById("accessError");
+      let grantAccess;
+
+      window.PEDIDOS_DASHBOARD_ACCESS = new Promise((resolve) => {
+        grantAccess = resolve;
+      });
+
+      function unlock() {
+        try { sessionStorage.setItem("rio_pedidos_dashboard_access_v1", "ok"); } catch {}
+        gate.style.display = "none";
+        gate.hidden = true;
+        content.hidden = false;
+        content.style.display = "block";
+        grantAccess();
+      }
+
+      let unlocked = false;
+      try { unlocked = sessionStorage.getItem("rio_pedidos_dashboard_access_v1") === "ok"; } catch {}
+      if (unlocked) unlock();
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        try {
+          if (password.value === "Marketing.19") {
+            unlock();
+          } else {
+            error.textContent = "Clave incorrecta.";
+            password.value = "";
+            password.focus();
+          }
+        } catch (submitError) {
+          error.textContent = "No se pudo validar el acceso. Recargá la página.";
+          console.error(submitError);
+        }
+      });
+    })();
+  </script>
+  <script src="api-config.js?v=8d2a483d66"></script>
+  <script src="app.js?v=ec58edf3ae"></script>
+  <script src="../../assets/rio-report-problem.js?v=fdea61e060"></script>
+<script src="../../assets/app-catalog.js?v=fd52fc724b"></script>
+<script src="../../assets/app-shell.js?v=66a3fcb6ed"></script>
+</body>
+</html>

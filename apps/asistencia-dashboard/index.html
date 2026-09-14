@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Asistencia - RIO</title>
+  <meta name="description" content="Dashboard mensual de asistencia, faltas y llegadas tarde por local y empleado." />
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDPZFHV1BV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-CDPZFHV1BV");
+  </script>
+
+  <link rel="stylesheet" href="styles.css?v=82bf1aae6f" />
+  <link rel="stylesheet" href="../../assets/rio-theme.css?v=75a74925ef" />
+  <link rel="stylesheet" href="../../assets/app-shell.css?v=99a9c322c0" />
+  <link rel="icon" href="../../assets/rio-mark.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../assets/rio-identity.css?v=c9458779b8" />
+<script src="../../assets/rio-access.js?v=935accae1e"></script>
+<script src="../../assets/rio-context.js?v=e68d2b012b"></script>
+<link rel="stylesheet" href="../../assets/rio-context.css?v=952f92312d">
+</head>
+<body class="rio-app" data-rio-app="asistencia-dashboard">
+  <header class="container module-topbar">
+    <a href="../../index.html" class="btn back-btn">Volver</a>
+    <div class="module-topbar__title">
+      <h1>Dashboard Asistencia</h1>
+      <p>Mes en curso, faltas, llegadas tarde y ultimos 30 dias por empleado</p>
+    </div>
+    <div class="module-topbar__actions">
+      <button id="downloadSellerNumbersBtn" class="btn btn-primary" type="button">Descargar numeros de vendedora</button>
+      <button id="refreshBtn" class="btn" type="button">Actualizar</button>
+    </div>
+  </header>
+
+  <main class="container dash-shell">
+    <section class="filters-panel">
+      <label>
+        Periodo
+        <select id="periodFilter">
+          <option value="last30">Ultimos 30 dias</option>
+          <option value="month">Mes seleccionado</option>
+        </select>
+      </label>
+      <label>
+        Mes
+        <input id="monthInput" type="month" />
+      </label>
+      <label>
+        Local
+        <select id="branchFilter"><option value="">Todos</option></select>
+      </label>
+      <label>
+        Empleado
+        <select id="employeeFilter"><option value="">Todos</option></select>
+      </label>
+      <label>
+        Buscar
+        <input id="searchInput" type="search" placeholder="Nombre, codigo, local o estado" />
+      </label>
+    </section>
+
+    <section class="kpi-grid">
+      <article class="kpi-card">
+        <span>Dias trabajables</span>
+        <strong id="eventsCount">0</strong>
+      </article>
+      <article class="kpi-card">
+        <span>Faltas</span>
+        <strong id="absencesCount">0</strong>
+      </article>
+      <article class="kpi-card">
+        <span>Llegadas tarde</span>
+        <strong id="lateCount">0</strong>
+      </article>
+      <article class="kpi-card">
+        <span>Sin registro</span>
+        <strong id="missingCount">0</strong>
+      </article>
+    </section>
+
+    <section class="dash-grid">
+      <article class="panel span-2">
+        <div class="panel-head">
+          <div>
+            <h2>Locales por asistencia</h2>
+            <p id="branchHint">Comparacion mensual por faltas, tardes y cargas faltantes</p>
+          </div>
+        </div>
+        <div id="branchScoreList" class="branch-score-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Locales con mas faltas</h2>
+        </div>
+        <div id="branchAbsencesList" class="rank-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Locales con mas llegadas tarde</h2>
+        </div>
+        <div id="branchLateList" class="rank-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Empleados con mas faltas</h2>
+        </div>
+        <div id="employeeAbsencesList" class="rank-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>Empleados con mas llegadas tarde</h2>
+        </div>
+        <div id="employeeLateList" class="rank-list"></div>
+      </article>
+
+      <article class="panel span-2">
+        <div class="panel-head">
+          <div>
+            <h2>Ultimos 30 dias por empleado</h2>
+            <p id="employeeHistoryHint">Selecciona un empleado o revisa el resumen general.</p>
+          </div>
+        </div>
+        <div id="employeeHistory" class="history-grid"></div>
+      </article>
+
+      <article class="panel span-2">
+        <div class="panel-head">
+          <div>
+            <h2>Jornadas</h2>
+            <p id="tableHint">Jornadas esperadas filtradas.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Local</th>
+                <th>Codigo</th>
+                <th>Empleado</th>
+                <th>Estado</th>
+                <th>Hora</th>
+                <th>Esperado</th>
+                <th>Obs</th>
+              </tr>
+            </thead>
+            <tbody id="eventsTable"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <dialog id="sellerNumbersDialog" class="seller-dialog" aria-labelledby="sellerNumbersTitle">
+    <form id="sellerNumbersForm" class="seller-dialog__card">
+      <div class="seller-dialog__head">
+        <div>
+          <h2 id="sellerNumbersTitle">Descargar numeros de vendedora</h2>
+          <p>Ingresa el codigo para preparar la hoja A4.</p>
+        </div>
+        <button id="closeSellerNumbersBtn" class="seller-dialog__close" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <label for="sellerCodeInput">
+        Codigo de vendedora
+        <input id="sellerCodeInput" type="text" inputmode="numeric" autocomplete="off" placeholder="Ejemplo: 247" required />
+      </label>
+      <div id="sellerLookupResult" class="seller-dialog__result" aria-live="polite"></div>
+      <div class="seller-dialog__actions">
+        <button id="cancelSellerNumbersBtn" class="btn" type="button">Cancelar</button>
+        <button id="generateSellerNumbersBtn" class="btn btn-primary" type="submit">Descargar PDF</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="api-config.js?v=d13e524179"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="app.js?v=ed9ff89f37"></script>
+  <script src="../../assets/rio-report-problem.js?v=fdea61e060"></script>
+  <script src="../../assets/app-catalog.js?v=fd52fc724b"></script>
+  <script src="../../assets/app-shell.js?v=66a3fcb6ed"></script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CDPZFHV1BV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-CDPZFHV1BV");
+  </script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Asistencia Personal - RIO</title>
+  <meta name="description" content="Carga de asistencia por sucursal con backend en Google Sheets." />
+  <link rel="stylesheet" href="./styles.css?v=b6f8441cc8" />
+    <link rel="stylesheet" href="../../assets/rio-theme.css?v=75a74925ef" />
+  <link rel="stylesheet" href="../../assets/app-shell.css?v=99a9c322c0" />
+  <link rel="icon" href="../../assets/rio-mark.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../assets/rio-identity.css?v=c9458779b8" />
+<script src="../../assets/rio-access.js?v=935accae1e"></script>
+<script src="../../assets/rio-context.js?v=e68d2b012b"></script>
+<link rel="stylesheet" href="../../assets/rio-context.css?v=952f92312d">
+</head>
+
+<body class="rio-app" data-rio-app="asistencia">
+  <header class="topbar module-topbar">
+    <a class="btn-ghost" href="../../index.html">← Volver</a>
+    <div class="topbar-left module-topbar__title">
+      <div class="brand">RIO Tools Suite</div>
+      <div class="subtitle">Asistencia de Personal</div>
+    </div>
+    <div class="module-topbar__actions">
+      <button id="btnNumerosVendedora" class="btn primary" type="button">Descargar numeros de vendedora</button>
+    </div>
+  </header>
+
+  <main class="container asistencia-layout">
+    <section class="card form-card">
+      <div class="card-head">
+        <h2>Cargar asistencia</h2>
+        <div class="pill" id="statusPill" aria-live="polite">
+          <span class="dot" id="pillDot"></span>
+          <span id="pillText">Listo</span>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label for="sucursalSelect">Sucursal</label>
+          <div class="row">
+            <select id="sucursalSelect" class="input"></select>
+          </div>
+          <div class="help" id="sucursalHelp">La sucursal queda guardada en esta PC.</div>
+        </div>
+
+        <div class="field">
+          <label for="vendedorId">Codigo o nombre</label>
+          <input id="vendedorId" class="input" autocomplete="off" placeholder="Ej: 1023 o Romina" />
+          <div class="help">Enter para buscar por codigo o nombre.</div>
+          <div class="vendedor-matches" id="vendedorMatches"></div>
+        </div>
+
+        <div class="field">
+          <label>Nombre</label>
+          <div class="readonly" id="vendedorNombre">-</div>
+          <div class="help" id="padronHint">Se valida contra padron.</div>
+        </div>
+
+        <div class="field">
+          <label for="horaSelect">Hora declarada</label>
+          <select id="horaSelect" class="input"></select>
+          <div class="help">Intervalos de 5 minutos.</div>
+        </div>
+
+        <div class="field">
+          <label>Tipo</label>
+          <input id="tipoEvento" type="hidden" value="ENTRADA" />
+          <div class="event-options" id="tipoEventoOptions" role="radiogroup" aria-label="Tipo de asistencia">
+            <button class="event-option is-selected" type="button" data-event-type="ENTRADA" role="radio" aria-checked="true">ENTRADA</button>
+            <button class="event-option" type="button" data-event-type="FALTA" role="radio" aria-checked="false">FALTA</button>
+            <button class="event-option" type="button" data-event-type="FALTA JUSTIFICADA" role="radio" aria-checked="false">FALTA JUSTIFICADA</button>
+            <button class="event-option" type="button" data-event-type="PERMISO" role="radio" aria-checked="false">PERMISO</button>
+            <button class="event-option" type="button" data-event-type="VACACIONES" role="radio" aria-checked="false">VACACIONES</button>
+          </div>
+          <div class="help">ENTRADA queda seleccionada por defecto.</div>
+        </div>
+
+        <div class="field">
+          <label for="observacion">Observacion (opcional)</label>
+          <input id="observacion" class="input" autocomplete="off" placeholder="Ej: llego tarde por lluvia" />
+          <div class="help">Se guarda junto al registro.</div>
+        </div>
+
+        <div class="field">
+          <label for="comprobanteFile">Certificado etc.</label>
+          <input id="comprobanteFile" class="input" type="file" accept="application/pdf,image/*" />
+          <div class="help" id="comprobanteInfo">Opcional. PDF o imagen.</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="btnBuscar" class="btn" type="button">Buscar vendedor</button>
+        <button id="btnGuardar" class="btn primary" type="button">Guardar</button>
+        <button id="btnLimpiar" class="btn" type="button">Limpiar</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="last">
+        <div class="last-title">Ultimo guardado</div>
+        <div class="last-box" id="lastSaved">-</div>
+      </div>
+    </section>
+
+    <aside class="card today-card">
+      <div class="card-head">
+        <div>
+          <h1>Registros de hoy</h1>
+          <div class="help" id="hoyHint">Cargando...</div>
+        </div>
+      </div>
+
+      <div class="today-table-wrap">
+        <table class="table" id="hoyTable">
+          <thead>
+            <tr>
+              <th>Hora</th>
+              <th>Vendedor</th>
+              <th>Nombre</th>
+              <th>Tipo</th>
+              <th>Obs</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="hoyTbody">
+            <tr><td colspan="6">-</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="numerosVendedoraDialog" class="numbers-dialog" aria-labelledby="numerosVendedoraTitle">
+    <form id="numerosVendedoraForm" class="numbers-dialog__card">
+      <div class="numbers-dialog__head">
+        <div>
+          <h2 id="numerosVendedoraTitle">Descargar numeros de vendedora</h2>
+          <p>Ingresa el codigo para preparar la hoja A4.</p>
+        </div>
+        <button id="btnCerrarNumeros" class="numbers-dialog__close" type="button" aria-label="Cerrar">&times;</button>
+      </div>
+      <label class="numbers-dialog__label" for="codigoNumerosVendedora">
+        Codigo de vendedora
+        <input id="codigoNumerosVendedora" class="input" type="text" inputmode="numeric" autocomplete="off" placeholder="Ejemplo: 247" required />
+      </label>
+      <div id="resultadoNumerosVendedora" class="numbers-dialog__result" aria-live="polite"></div>
+      <div class="numbers-dialog__actions">
+        <button id="btnCancelarNumeros" class="btn" type="button">Cancelar</button>
+        <button id="btnDescargarNumeros" class="btn primary" type="submit">Descargar PDF</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="./app.js?v=b0b78c96ac"></script>
+  <footer>
+    RIO Tools Suite | Plataforma operativa interna
+  </footer>
+  <script src="../../assets/rio-report-problem.js?v=fdea61e060"></script>
+  <script src="../../assets/app-catalog.js?v=fd52fc724b"></script>
+  <script src="../../assets/app-shell.js?v=66a3fcb6ed"></script>
+</body>
+</html>
