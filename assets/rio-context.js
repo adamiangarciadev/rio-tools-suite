@@ -6,7 +6,7 @@
   const labels = {AV2:'Avellaneda 2',PUEYRREDON:'Pueyrredón',DEPOSITO:'Depósito',ADMINISTRACION:'Administración',CORRIENTES2:'Corrientes 2'};
   const normalize = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]/g,'');
   const canonical = value => ({AVELLANEDA:'AV2',AVELLANEDA2:'AV2',AVELLANEDA3249:'AV2',AVELLANEDA2900:'NAZCA',AV1:'NAZCA',AVENIDAAVELLANEDA:'AV2',AVENIDAAVELLANEDA2:'AV2',CORRIENTES1:'CORRIENTES',DEPOSITOCENTRAL:'DEPOSITO'}[normalize(value)] || normalize(value));
-  const label = value => labels[value] || value;
+  const label = value => String(labels[value] || value || '').toLocaleUpperCase('es-AR');
   const read = () => {try { const value=localStorage.getItem(KEY);return branches.includes(value)?value:'';}catch{return '';}};
   const branch=read();
   const isLocal=()=>!!branch&&!['DEPOSITO','ADMINISTRACION'].includes(branch);
