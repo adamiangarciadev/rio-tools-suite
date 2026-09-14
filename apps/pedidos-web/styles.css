@@ -83,7 +83,7 @@ tr.alerta {
 
 .pedido-row {
   position: relative;
-  --estado-bg: rgba(17, 24, 33, .96);
+  --estado-bg: #f6f1ed;
   --estado-border: rgba(148, 163, 184, .24);
 }
 
@@ -110,10 +110,20 @@ tr.alerta {
   --estado-border: #a78bfa;
 }
 
+.pedido-row.st-armado,
 .pedido-row.st-pickeado-armado,
 .pedido-row.st-pickeado {
-  --estado-bg: rgba(79, 70, 229, .18);
-  --estado-border: #818cf8;
+  --estado-bg: #d9f4e3;
+  --estado-border: #368452;
+}
+
+.pedido-row.st-pedido-con-faltantes {
+  --estado-bg: #ffe4c7;
+  --estado-border: #b96516;
+}
+
+.pedido-row:is(.st-armado, .st-pickeado-armado, .st-pickeado, .st-pedido-con-faltantes) > td {
+  color: #302b2a;
 }
 
 .pedido-row.st-esperando-pago {
