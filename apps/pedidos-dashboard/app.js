@@ -267,6 +267,8 @@
     if (state.loading) return;
 
     try {
+      setupDateDefaults();
+      setLoadNotice("");
       state.loading = true;
       el.refreshBtn.disabled = true;
       el.refreshBtn.textContent = "Actualizando...";
@@ -287,8 +289,8 @@
       render();
     } catch (error) {
       console.error(error);
-      state.rows = [];
-      renderEmpty(error.message || "No se pudo cargar Pedidos_LOG.");
+      setLoadNotice("No pudimos actualizar los pedidos desde Google. " + (state.rows.length ? "Seguís viendo la última carga de esta sesión. " : "") + "Probá nuevamente con Actualizar. Si persiste, revisá la disponibilidad del servicio de pedidos.");
+      if (!state.rows.length) renderEmpty("Datos no disponibles. Reintentá con Actualizar.");
     } finally {
       state.loading = false;
       el.refreshBtn.disabled = false;
@@ -533,17 +535,44 @@
     `).join("");
   }
 
-  async function fetchJson(url) {
-    const response = await fetch(url);
-    const text = await response.text();
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      throw new Error(text || "La respuesta del servidor no es JSON valido.");
+  function setLoadNotice(message) {
+    let notice = document.getElementById("dashboardLoadNotice");
+    if (!notice) {
+      notice = document.createElement("p");
+      notice.id = "dashboardLoadNotice";
+      notice.setAttribute("role", "alert");
+      notice.className = "empty-state";
+      document.querySelector(".dashboard-shell").prepend(notice);
     }
-    if (!data.ok) throw new Error(data.error || "La API devolvio un error.");
-    return data;
+    notice.textContent = message;
+    notice.hidden = !message;
+  }
+
+  async function fetchJson(url) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 45000);
+      try {
+        const freshUrl = new URL(url);
+        freshUrl.searchParams.set("_rio", `${Date.now()}-${attempt}`);
+        const response = await fetch(freshUrl.href, {
+          cache: "no-store", credentials: "omit", signal: controller.signal
+        });
+        if (!response.ok) throw new Error("Servicio de pedidos no disponible.");
+        const text = await response.text();
+        let data;
+        try { data = JSON.parse(text); }
+        catch { throw new Error("Google no devolvió datos de pedidos."); }
+        if (!data || data.ok !== true || !Array.isArray(data.data)) {
+          throw new Error("La respuesta del servicio de pedidos no es válida.");
+        }
+        return data;
+      } catch (error) {
+        if (attempt === 1) throw new Error("No se pudo cargar el historial de pedidos. Reintentá con Actualizar.");
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
   }
 
   function normalizeRows(rows) {
@@ -779,6 +808,7 @@
       return [];
     }
   }
+
 
 
   function parseCsv(text) {
